@@ -1,11 +1,4 @@
-import {
-  ShoppingItem,
-  ShoppingActionTypes,
-  ADD_ITEM,
-  EDIT_ITEM,
-  DELETE_ITEM,
-  TOGGLE_ITEM,
-} from './actions';
+import { ADD_ITEM, DELETE_ITEM, EDIT_ITEM, ShoppingActionTypes, ShoppingItem, TOGGLE_ITEM } from './actions';
 
 export interface ShoppingState {
   shoppingList: ShoppingItem[];

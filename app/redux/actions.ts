@@ -1,3 +1,5 @@
+import { Action } from 'redux';
+
 export const ADD_ITEM = 'ADD_ITEM';
 export const EDIT_ITEM = 'EDIT_ITEM';
 export const DELETE_ITEM = 'DELETE_ITEM';
@@ -10,23 +12,19 @@ export interface ShoppingItem {
   purchased: boolean;
 }
 
-export interface AddItemAction {
-  type: typeof ADD_ITEM;
+export interface AddItemAction extends Action<typeof ADD_ITEM> {
   payload: ShoppingItem;
 }
 
-export interface EditItemAction {
-  type: typeof EDIT_ITEM;
+export interface EditItemAction extends Action<typeof EDIT_ITEM> {
   payload: ShoppingItem;
 }
 
-export interface DeleteItemAction {
-  type: typeof DELETE_ITEM;
+export interface DeleteItemAction extends Action<typeof DELETE_ITEM> {
   payload: number;
 }
 
-export interface ToggleItemAction {
-  type: typeof TOGGLE_ITEM;
+export interface ToggleItemAction extends Action<typeof TOGGLE_ITEM> {
   payload: number;
 }
 

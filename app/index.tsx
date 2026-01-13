@@ -1,15 +1,12 @@
-import { Text, View } from "react-native";
+import React from 'react';
+import { Provider } from 'react-redux';
+import ShoppingListScreen from './pages/ShoppingListScreen';
+import store from './redux/store';
 
 export default function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    <Provider store={store}>
+      <ShoppingListScreen />
+    </Provider>
   );
 }
