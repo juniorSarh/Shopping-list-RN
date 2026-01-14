@@ -52,7 +52,7 @@ const AddItemForm: React.FC = () => {
         <Button 
           title="Add to List" 
           onPress={handleAdd}
-          color="#ffffff"
+          color="#2266e4"
           disabled={!name || !quantity}
         />
       </View>

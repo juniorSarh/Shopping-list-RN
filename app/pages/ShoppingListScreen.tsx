@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import AddItemForm from '../components/AddItemForm';
 import ShoppingItem from '../components/ShoppingItem';
@@ -36,13 +36,16 @@ const ShoppingListScreen = () => {
             <Text style={styles.emptySubtext}>Add your first item above to get started</Text>
           </View>
         ) : (
-          <FlatList
-            data={shoppingList}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <ShoppingItem item={item} />}
+          <ScrollView 
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.listContent}
-          />
+            nestedScrollEnabled={true}
+          >
+            {shoppingList.map((item) => (
+              <ShoppingItem key={item.id} item={item} />
+            ))}
+          </ScrollView>
         )}
       </View>
     </View>
@@ -80,9 +83,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f9fafb',
   },
-  listContent: {
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
     paddingHorizontal: 20,
     paddingVertical: 8,
+    paddingBottom: 20,
   },
   emptyState: {
     flex: 1,

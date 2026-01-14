@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { deleteItem, editItem, ShoppingItem as ItemType, toggleItem } from '../redux/actions';
+import { deleteItem, ShoppingItem as ItemType, toggleItem } from '../redux/actions';
+import EditItemModal from './EditItemModal';
 
 interface Props {
   item: ItemType;
@@ -9,51 +10,28 @@ interface Props {
 
 const ShoppingItem: React.FC<Props> = ({ item }) => {
   const dispatch = useDispatch();
-  const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(item.name);
-  const [quantity, setQuantity] = useState(item.quantity);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
 
-  const handleSave = () => {
-    dispatch(editItem({ ...item, name, quantity }) as any);
-    setIsEditing(false);
+  const handleEdit = () => {
+    setIsEditModalVisible(true);
   };
 
-  const handleCancel = () => {
-    setName(item.name);
-    setQuantity(item.quantity);
-    setIsEditing(false);
+  const handleCloseModal = () => {
+    setIsEditModalVisible(false);
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.leftSection}>
-          <Switch
-            value={item.purchased}
-            onValueChange={() => dispatch(toggleItem(item.id) as any)}
-            trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
-            thumbColor={item.purchased ? '#ffffff' : '#f3f4f6'}
-          />
-          
-          {isEditing ? (
-            <View style={styles.editContainer}>
-              <TextInput
-                value={name}
-                onChangeText={setName}
-                style={[styles.input, styles.nameInput]}
-                placeholder="Item name"
-                placeholderTextColor="#9ca3af"
-              />
-              <TextInput
-                value={quantity}
-                onChangeText={setQuantity}
-                style={[styles.input, styles.quantityInput]}
-                placeholder="Quantity"
-                keyboardType="numeric"
-                placeholderTextColor="#9ca3af"
-              />
-            </View>
-          ) : (
+    <>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <View style={styles.leftSection}>
+            <Switch
+              value={item.purchased}
+              onValueChange={() => dispatch(toggleItem(item.id) as any)}
+              trackColor={{ false: '#e5e7eb', true: '#3b82f6' }}
+              thumbColor={item.purchased ? '#ffffff' : '#f3f4f6'}
+            />
+            
             <View style={styles.textContainer}>
               <Text style={[styles.itemText, item.purchased && styles.purchasedText]}>
                 {item.name}
@@ -62,43 +40,32 @@ const ShoppingItem: React.FC<Props> = ({ item }) => {
                 Qty: {item.quantity}
               </Text>
             </View>
-          )}
-        </View>
-        
-        <View style={styles.rightSection}>
-          {isEditing ? (
-            <View style={styles.editButtons}>
-              <TouchableOpacity 
-                style={[styles.button, styles.saveButton]} 
-                onPress={handleSave}
-              >
-                <Text style={styles.saveButtonText}>Save</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                style={[styles.button, styles.cancelButton]} 
-                onPress={handleCancel}
-              >
-                <Text style={styles.cancelButtonText}>Cancel</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
+          </View>
+          
+          <View style={styles.rightSection}>
             <TouchableOpacity 
               style={[styles.button, styles.editButton]} 
-              onPress={() => setIsEditing(true)}
+              onPress={handleEdit}
             >
               <Text style={styles.editButtonText}>Edit</Text>
             </TouchableOpacity>
-          )}
-          
-          <TouchableOpacity 
-            style={[styles.button, styles.deleteButton]} 
-            onPress={() => dispatch(deleteItem(item.id) as any)}
-          >
-            <Text style={styles.deleteButtonText}>Delete</Text>
-          </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={[styles.button, styles.deleteButton]} 
+              onPress={() => dispatch(deleteItem(item.id) as any)}
+            >
+              <Text style={styles.deleteButtonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+
+      <EditItemModal
+        visible={isEditModalVisible}
+        item={item}
+        onClose={handleCloseModal}
+      />
+    </>
   );
 };
 
@@ -146,32 +113,6 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
     textDecorationLine: 'line-through',
   },
-  editContainer: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    backgroundColor: '#f9fafb',
-    padding: 12,
-    borderRadius: 8,
-    fontSize: 16,
-    color: '#1f2937',
-    fontWeight: '500',
-  },
-  nameInput: {
-    flex: 2,
-    marginRight: 8,
-  },
-  quantityInput: {
-    flex: 1,
-    minWidth: 80,
-  },
-  editButtons: {
-    flexDirection: 'row',
-    gap: 8,
-  },
   button: {
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -184,22 +125,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   editButtonText: {
-    color: '#374151',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  saveButton: {
-    backgroundColor: '#10b981',
-  },
-  saveButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  cancelButton: {
-    backgroundColor: '#f3f4f6',
-  },
-  cancelButtonText: {
     color: '#374151',
     fontSize: 14,
     fontWeight: '600',
